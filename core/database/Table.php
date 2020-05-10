@@ -10,4 +10,5 @@ class Table
 
     const USERS = '{{%users}}';
     const USER = '{{%user}}';
+    const COMPANIES = '{{%companies}}';
 }
