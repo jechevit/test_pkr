@@ -14,6 +14,8 @@ use yii\db\ActiveRecord;
  * @property int $id
  * @property string $name
  * @property int $inn
+ * @property int $created_at
+ * @property int $updated_at
  *
  */
 class Company extends ActiveRecord
@@ -39,6 +41,7 @@ class Company extends ActiveRecord
         $company->inn = $inn;
         $company->changeDirector($director);
         $company->changeAddress($address);
+        $company->created_at = time();
 
         return $company;
     }
@@ -54,6 +57,7 @@ class Company extends ActiveRecord
         $this->inn = $inn;
         $this->changeDirector($director);
         $this->changeAddress($address);
+        $this->updated_at = time();
     }
 
     /**

@@ -15,4 +15,8 @@ class Column
     const STATUS = 'status';
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'updated_at';
+    const INN = 'inn';
+    const NAME = 'name';
+    const ADDRESS_JSON = 'address_json';
+    const DIRECTOR_JSON = 'director_json';
 }
