@@ -8,6 +8,8 @@ $params = array_merge(
 
 return [
     'id' => 'app-frontend',
+    'name' => 'Companies',
+    'language' => 'ru',
     'basePath' => dirname(__DIR__),
     'bootstrap' => [
         'log',
@@ -19,9 +21,10 @@ return [
             'csrfParam' => '_csrf-frontend',
         ],
         'user' => [
-            'identityClass' => 'common\models\User',
+            'identityClass' => 'common\auth\Identity',
             'enableAutoLogin' => true,
-            'identityCookie' => ['name' => '_identity-frontend', 'httpOnly' => true],
+            'identityCookie' => ['name' => '_identity', 'httpOnly' => true, 'domain' => $params['cookieDomain']],
+            'loginUrl' => ['auth/login'],
         ],
         'session' => [
             // this is the name of the session cookie used for login on the frontend
@@ -43,6 +46,20 @@ return [
         'urlManager' => function () {
             return Yii::$app->get('frontendUrlManager');
         },
+    ],
+    'as access' => [
+        'class' => 'yii\filters\AccessControl',
+        'except' => [
+            'auth/login',
+            'auth/logout',
+            'site/error'
+        ],
+        'rules' => [
+            [
+                'allow' => true,
+                'roles' => ['user'],
+            ],
+        ],
     ],
     'params' => $params,
 ];

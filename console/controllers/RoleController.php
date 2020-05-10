@@ -3,6 +3,7 @@
 namespace console\controllers;
 
 use core\repositories\UserRepository;
+use Exception;
 use Yii;
 use yii\console\Controller;
 use yii\rbac\ManagerInterface;
@@ -11,6 +12,7 @@ class RoleController extends Controller
 {
     const ACCESS_PANEL = 'accessPanel';
     const ADMIN = 'admin';
+    const USER = 'user';
 
     /**
      * @var UserRepository
@@ -30,22 +32,35 @@ class RoleController extends Controller
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function actionRole()
     {
+        $user = $this->auth->createRole(self::USER);
+        $user->description = 'user';
+        $this->auth->add($user);
+        $admin = $this->auth->createRole(self::ADMIN);
+        $admin->description = 'admin';
+        $this->auth->add($admin);
 
+        $this->auth->addChild($admin, $user);
     }
 
     /**
      * @param int $id
-     * @throws \Exception
+     * @param string|null $role
+     * @throws Exception
      */
-    public function actionAdd(int $id)
+    public function actionAdd(int $id, string $role = null)
     {
         $user = $this->userRepository->get($id);
 
-        $role = $this->auth->getRole(self::ADMIN);
+        if (isset($role)){
+            $role = $this->auth->getRole($role);
+        } else {
+            $role = $this->auth->getRole(self::ADMIN);
+        }
+
         $this->auth->assign($role, $user->id);
     }
 
