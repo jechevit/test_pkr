@@ -70,8 +70,13 @@ class CompanyController extends Controller
      */
     public function actionView(int $id)
     {
+        $company = $this->findModel($id);
+
+        if (Yii::$app->user->can(RoleController::ADMIN)) {
+            return $this->redirect(['update', 'id' => $company->id]);
+        }
         return $this->render('view', [
-            'model' => $this->findModel($id)
+            'model' => $company
         ]);
     }
 

@@ -21,9 +21,13 @@ class CompanyForm extends CompositeForm
         if ($company) {
             $this->name = $company->name;
             $this->inn = $company->inn;
-            $this->address = new AddressForm($company);
-            $this->director = new DirectorForm($company);
+            $this->address = new AddressForm($company->address);
+            $this->director = new DirectorForm($company->director);
+        } else {
+            $this->address = new AddressForm();
+            $this->director = new DirectorForm();
         }
+
         parent::__construct($config);
     }
 
@@ -32,7 +36,7 @@ class CompanyForm extends CompositeForm
         return [
             [['name', 'inn'], 'required'],
             ['name', 'string'],
-            ['inn', 'integer', 'max' => 12, 'min' => 12]
+            ['inn', 'integer']// 'min' => 11, 'max' => 12]
         ];
     }
 

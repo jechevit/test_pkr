@@ -2,21 +2,21 @@
 
 namespace core\forms;
 
-use core\entities\Company;
+use core\entities\Director;
 use yii\base\Model;
 
 class DirectorForm extends Model
 {
-    public $fistName;
+    public $firstName;
     public $secondName;
     public $patronymic;
 
-    public function __construct(Company $company = null, $config = [])
+    public function __construct(Director $director = null, $config = [])
     {
-        if ($company) {
-            $this->fistName = $company->director->firstName;
-            $this->secondName = $company->director->secondName;
-            $this->patronymic = $company->director->patronymic;
+        if ($director) {
+            $this->firstName = $director->firstName;
+            $this->secondName = $director->secondName;
+            $this->patronymic = $director->patronymic;
         }
         parent::__construct($config);
     }
