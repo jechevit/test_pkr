@@ -10,9 +10,9 @@ use core\helpers\UserHelper;
 /* @var $this yii\web\View */
 /* @var $model User */
 
-$this->title = $model->id;
+$this->title = $model->username;
 $this->params['breadcrumbs'][] = ['label' => 'Пользователи', 'url' => ['index']];
-$this->params['breadcrumbs'][] = 'Пользователь ' . $this->title;
+$this->params['breadcrumbs'][] = 'Пользователь: ' . $this->title;
 YiiAsset::register($this);
 ?>
 <div class="nav-tabs-custom">
