@@ -39,8 +39,21 @@ YiiAsset::register($this);
                     },
                     'format' => 'raw',
                 ],
-                'created_at:datetime',
-                'updated_at:datetime',
+                [
+                    'label' => 'Дата создания',
+                    'attribute' => 'created_at',
+                    'value' => function(User $user) {
+                        return Yii::$app->formatter->asDatetime($user->created_at, 'php:Y-m-d H:i:s');
+                    }
+                ],
+                [
+                    'label' => 'Дата создания',
+                    'attribute' => 'updated_at',
+                    'value' => function(User $user) {
+                        return Yii::$app->formatter->asDatetime($user->created_at, 'php:Y-m-d H:i:s');
+                    },
+                    'visible' => isset($model->updated_at)
+                ],
             ],
         ]) ?>
     </div>

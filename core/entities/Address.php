@@ -38,6 +38,6 @@ class Address
      */
     public function getAddress(): string
     {
-        return "{$this->country} {$this->city} {$this->street} {$this->house}";
+        return "{$this->country}, {$this->city}, {$this->street}, {$this->house}";
     }
 }
