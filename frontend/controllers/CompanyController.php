@@ -46,7 +46,8 @@ class CompanyController extends Controller
                     [
                         'actions' => [
                             'create',
-                            'update'
+                            'update',
+                            'delete'
                         ],
                         'allow' => true,
                         'roles' => [RoleController::ADMIN],
@@ -129,6 +130,16 @@ class CompanyController extends Controller
             'model' => $form,
             'company' => $company
         ]);
+    }
+
+    public function actionDelete(int $id)
+    {
+        try {
+            $this->service->remove($id);
+        } catch (DomainException $e) {
+            Yii::$app->session->setFlash('error', $e->getMessage());
+        }
+        return $this->redirect(['index']);
     }
 
     /**

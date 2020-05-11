@@ -49,6 +49,10 @@ class CompanyService
         return $company;
     }
 
+    /**
+     * @param int $id
+     * @param CompanyForm $form
+     */
     public function edit(int $id, CompanyForm $form): void
     {
         $company = $this->repository->get($id);
@@ -70,5 +74,14 @@ class CompanyService
         );
 
         $this->repository->save($company);
+    }
+
+    /**
+     * @param int $id
+     */
+    public function remove(int $id)
+    {
+        $company = $this->repository->get($id);
+        $this->repository->remove($company);
     }
 }

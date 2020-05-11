@@ -16,6 +16,14 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="site-contact">
     <h1><?= Html::encode($this->title) ?></h1>
 
+    <?= Html::a('Удалить компанию', ['delete', 'id' => $company->id], [
+        'class' => 'btn btn-danger',
+        'data' => [
+            'confirm' => 'Are you sure you want to delete this item?',
+            'method' => 'post',
+        ],
+    ]) ?>
+
     <?= $this->render('_form', [
         'model' => $model
     ])?>
