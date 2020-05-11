@@ -7,6 +7,7 @@ use core\forms\user\PasswordChangeForm;
 use core\forms\user\UserCreateForm;
 use core\forms\user\UserEditForm;
 use core\repositories\UserRepository;
+use DomainException;
 use Throwable;
 use yii\base\Exception;
 use yii\db\StaleObjectException;
@@ -101,6 +102,7 @@ class UserService
     public function draft(int $id): void
     {
         $user = $this->repository->get($id);
+        $this->checkUser($user);
         $user->draft();
         $this->repository->save($user);
     }
@@ -113,6 +115,19 @@ class UserService
     public function remove(int $id): void
     {
         $user = $this->repository->get($id);
+        $this->checkUser($user);
         $this->repository->remove($user);
+    }
+
+    /**
+     * @param User $user
+     * @return void
+     */
+    private function checkUser(User $user)
+    {
+        $user_id = \Yii::$app->user->getId();
+        if ($user->id === $user_id){
+            throw new DomainException('Запрещено издеваться над собой');
+        }
     }
 }

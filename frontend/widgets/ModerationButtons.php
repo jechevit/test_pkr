@@ -3,6 +3,7 @@
 namespace frontend\widgets;
 
 use core\entities\User;
+use Yii;
 use yii\base\Widget;
 use yii\helpers\Html;
 
@@ -29,15 +30,23 @@ class ModerationButtons extends Widget
     private function renderButtons(): string
     {
         $panel = [];
-        if ($this->user->isActive()) {
-            $panel[] = $this->draft();
-        } else {
-            $panel[] = $this->activate();
-        }
+
         $panel[] = $this->edit();
         $panel[] = $this->changePassword();
-        $panel[] = $this->delete();
+
+        if ($this->checkUser()) {
+            $panel[] = $this->statusButton();
+            $panel[] = $this->delete();
+        }
         return implode(' ', $panel);
+    }
+
+    private function statusButton(): string
+    {
+        if ($this->user->isActive()) {
+            return $this->draft();
+        }
+        return $this->activate();
     }
 
     /**
@@ -90,5 +99,13 @@ class ModerationButtons extends Widget
     private function button(string $title, string $url, array $options): string
     {
         return Html::a($title, [$url, 'id' => $this->user->id], $options);
+    }
+
+    /**
+     * @return bool
+     */
+    private function checkUser(): bool
+    {
+        return $this->user->id != Yii::$app->user->getId();
     }
 }

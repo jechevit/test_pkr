@@ -216,12 +216,14 @@ class UsersController extends Controller
      * @throws Throwable
      * @throws StaleObjectException
      */
-    public function actionDelete($id)
+    public function actionDelete(int $id)
     {
+        $user = $this->findModel($id);
         try {
-            $this->service->remove($id);
+            $this->service->remove($user->id);
         } catch (DomainException $e) {
             Yii::$app->session->setFlash('error', $e->getMessage());
+            return $this->redirect(['view', 'id' => $user->id]);
         }
         return $this->redirect(['index']);
     }
