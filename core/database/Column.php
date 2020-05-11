@@ -19,4 +19,6 @@ class Column
     const NAME = 'name';
     const ADDRESS_JSON = 'address_json';
     const DIRECTOR_JSON = 'director_json';
+    const ITEM_NAME = 'item_name';
+    const USER_ID = 'user_id';
 }
