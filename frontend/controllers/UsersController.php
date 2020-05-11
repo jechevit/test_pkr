@@ -4,6 +4,7 @@ namespace frontend\controllers;
 
 use console\controllers\RoleController;
 use core\entities\User;
+use core\forms\user\PasswordChangeForm;
 use core\forms\user\UserCreateForm;
 use core\forms\user\UserEditForm;
 use core\services\UserService;
@@ -15,7 +16,9 @@ use yii\base\Exception;
 use yii\db\StaleObjectException;
 use yii\filters\AccessControl;
 use yii\web\Controller;
+use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
+use yii\web\Response;
 
 class UsersController extends Controller
 {
@@ -52,6 +55,8 @@ class UsersController extends Controller
                             'view',
                             'create',
                             'edit',
+                            'activate',
+                            'draft',
                             'change-password',
                             'delete'
                         ],
@@ -145,6 +150,65 @@ class UsersController extends Controller
     }
 
     /**
+     * @param $id
+     * @return string|Response
+     * @throws Exception
+     * @throws ForbiddenHttpException
+     * @throws NotFoundHttpException
+     */
+    public function actionChangePassword($id)
+    {
+        $user = $this->findModel($id);
+
+        if (!Yii::$app->user->can('admin', ['user' => $user])){
+            throw new ForbiddenHttpException('Вы не можете редактировать пользователя');
+        }
+
+        $form = new PasswordChangeForm($user);
+        if ($form->load(Yii::$app->request->post()) && $form->validate()) {
+            $this->service->changePassword($user->id, $form);
+            return $this->redirect(['view', 'id' => $user->id]);
+        } else {
+            return $this->render('change-password', [
+                'model' => $form,
+                'user' => $user,
+            ]);
+        }
+    }
+
+    /**
+     * @param int $id
+     * @return Response
+     * @throws NotFoundHttpException
+     */
+    public function actionActivate(int $id)
+    {
+        $user = $this->findModel($id);
+        try {
+            $this->service->activate($user->id);
+        } catch (DomainException $e) {
+            Yii::$app->session->setFlash('error', $e->getMessage());
+        }
+        return $this->redirect(['view', 'id' => $user->id]);
+    }
+
+    /**
+     * @param int $id
+     * @return Response
+     * @throws NotFoundHttpException
+     */
+    public function actionDraft(int $id)
+    {
+        $user = $this->findModel($id);
+        try {
+            $this->service->draft($user->id);
+        } catch (DomainException $e) {
+            Yii::$app->session->setFlash('error', $e->getMessage());
+        }
+        return $this->redirect(['view', 'id' => $user->id]);
+    }
+
+    /**
      * Deletes an existing User model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
@@ -154,7 +218,11 @@ class UsersController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->service->remove($id);
+        try {
+            $this->service->remove($id);
+        } catch (DomainException $e) {
+            Yii::$app->session->setFlash('error', $e->getMessage());
+        }
         return $this->redirect(['index']);
     }
 

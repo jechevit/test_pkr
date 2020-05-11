@@ -23,7 +23,7 @@ use yii\db\ActiveRecord;
  */
 class User extends ActiveRecord
 {
-    const STATUS_WAIT = 0;
+    const STATUS_DRAFT = 0;
     const STATUS_ACTIVE = 10;
 
     /**
@@ -57,12 +57,28 @@ class User extends ActiveRecord
         $this->updated_at = time();
     }
 
+    public function draft(): void
+    {
+        if ($this->isDraft()){
+            throw new \DomainException('User is draft already');
+        }
+        $this->status = self::STATUS_DRAFT;
+    }
+
     /**
      * @return bool
      */
-    public function isWait(): bool
+    public function isDraft(): bool
     {
-        return $this->status === self::STATUS_WAIT;
+        return $this->status === self::STATUS_DRAFT;
+    }
+
+    public function activate(): void
+    {
+        if ($this->isActive()) {
+            throw new \DomainException('User is active already');
+        }
+        $this->status = self::STATUS_ACTIVE;
     }
 
     /**
@@ -136,7 +152,7 @@ class User extends ActiveRecord
      * @throws Exception
      */
 
-    private function setPassword($password)
+    public function setPassword($password)
     {
         $this->password_hash = Yii::$app->security->generatePasswordHash($password);
     }

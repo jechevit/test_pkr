@@ -12,7 +12,7 @@ class UserHelper
     public static function statusList(): array
     {
         return [
-            User::STATUS_WAIT => 'Ожидает',
+            User::STATUS_DRAFT => 'В архиве',
             User::STATUS_ACTIVE => 'Активный',
         ];
     }
@@ -20,7 +20,7 @@ class UserHelper
     public static function statusLabel($status): string
     {
         switch ($status) {
-            case User::STATUS_WAIT:
+            case User::STATUS_DRAFT:
                 $class = 'label label-default';
                 break;
             case User::STATUS_ACTIVE:

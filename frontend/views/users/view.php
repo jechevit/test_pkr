@@ -1,7 +1,7 @@
 <?php
 
+use frontend\widgets\ModerationButtons;
 use yii\helpers\ArrayHelper;
-use yii\helpers\Html;
 use yii\web\YiiAsset;
 use yii\widgets\DetailView;
 use core\entities\User;
@@ -18,17 +18,8 @@ YiiAsset::register($this);
 <div class="nav-tabs-custom">
     <div class="tab-content">
         <p>
-            <?= Html::a('Изменить', ['edit', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-            <?php if (Yii::$app->user->can('admin', ['user' => $model])): ?>
-                <?= Html::a('Смена пароля', ['change-password', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-            <?php endif;?>
-            <?= Html::a('Удалить', ['delete', 'id' => $model->id], [
-                'class' => 'btn btn-danger',
-                'data' => [
-                    'confirm' => 'Are you sure you want to delete this item?',
-                    'method' => 'post',
-                ],
-            ]) ?>
+            <?= ModerationButtons::widget(['user' => $model])?>
+
         </p>
         <?= DetailView::widget([
             'model' => $model,

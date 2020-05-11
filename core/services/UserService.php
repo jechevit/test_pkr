@@ -3,14 +3,13 @@
 namespace core\services;
 
 use core\entities\User;
+use core\forms\user\PasswordChangeForm;
 use core\forms\user\UserCreateForm;
 use core\forms\user\UserEditForm;
 use core\repositories\UserRepository;
 use Throwable;
-use Yii;
 use yii\base\Exception;
 use yii\db\StaleObjectException;
-use yii\rbac\ManagerInterface;
 
 class UserService
 {
@@ -72,6 +71,38 @@ class UserService
 
         $this->repository->save($user);
         $this->roleManager->assign($user->id, $form->role);
+    }
+
+    /**
+     * @param int $id
+     * @param PasswordChangeForm $form
+     * @throws Exception
+     */
+    public function changePassword(int $id, PasswordChangeForm $form): void
+    {
+        $user = $this->repository->get($id);
+        $user->setPassword($form->newPassword);
+        $this->repository->save($user);
+    }
+
+    /**
+     * @param int $id
+     */
+    public function activate(int $id): void
+    {
+        $user = $this->repository->get($id);
+        $user->activate();
+        $this->repository->save($user);
+    }
+
+    /**
+     * @param int $id
+     */
+    public function draft(int $id): void
+    {
+        $user = $this->repository->get($id);
+        $user->draft();
+        $this->repository->save($user);
     }
 
     /**

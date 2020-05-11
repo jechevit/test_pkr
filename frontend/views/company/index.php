@@ -44,7 +44,10 @@ $this->params['breadcrumbs'][] = $this->title;
                 }
             ],
 
-            ['class' => ActionColumn::class],
+            [
+                'class' => ActionColumn::class,
+                'template' => Yii::$app->user->can(RoleController::ADMIN) ? '{view} {update} {delete}' : '{view}',
+            ],
         ],
     ]); ?>
 
