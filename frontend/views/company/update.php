@@ -14,7 +14,6 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 
 <div class="site-contact">
-    <h1><?= Html::encode($this->title) ?></h1>
 
     <?= Html::a('Удалить компанию', ['delete', 'id' => $company->id], [
         'class' => 'btn btn-danger',

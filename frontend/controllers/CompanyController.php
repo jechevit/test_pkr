@@ -88,6 +88,9 @@ class CompanyController extends Controller
         ]);
     }
 
+    /**
+     * @return string|Response
+     */
     public function actionCreate()
     {
         $form = new CompanyForm();
@@ -132,6 +135,10 @@ class CompanyController extends Controller
         ]);
     }
 
+    /**
+     * @param int $id
+     * @return Response
+     */
     public function actionDelete(int $id)
     {
         try {
@@ -143,7 +150,7 @@ class CompanyController extends Controller
     }
 
     /**
-     * Finds the Apple model based on its primary key value.
+     * Finds the Company model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
      * @return Company|null the loaded model
