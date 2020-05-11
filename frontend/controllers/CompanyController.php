@@ -7,6 +7,7 @@ use core\entities\Company;
 use core\forms\CompanyForm;
 use core\services\CompanyService;
 use DomainException;
+use frontend\forms\CompanySearch;
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
@@ -60,7 +61,13 @@ class CompanyController extends Controller
      */
     public function actionIndex()
     {
-        return $this->render('index');
+        $searchModel = new CompanySearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+        return $this->render('index', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
     }
 
     /**
@@ -87,7 +94,7 @@ class CompanyController extends Controller
         if ($form->load(Yii::$app->request->post()) && $form->validate()) {
             try {
                 $company = $this->service->create($form);
-                return $this->redirect(['view', 'id' => $company->id]);
+                return $this->redirect(['index']);
             } catch (DomainException $e) {
                 Yii::$app->errorHandler->logException($e);
                 Yii::$app->session->setFlash('error', $e->getMessage());
