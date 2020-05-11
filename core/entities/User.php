@@ -13,7 +13,6 @@ use yii\db\ActiveRecord;
  * @property int $id
  * @property string username
  * @property string email
- * @property string phone
  * @property int created_at
  * @property string $password_reset_token
  * @property string $password_hash
@@ -30,17 +29,15 @@ class User extends ActiveRecord
     /**
      * @param string $username
      * @param string $email
-     * @param string $phone
      * @param string $password
      * @return User
      * @throws Exception
      */
-    public static function create(string $username, string $email, string $phone, string $password): self
+    public static function create(string $username, string $email, string $password): self
     {
         $user = new User();
         $user->username = $username;
         $user->email = $email;
-        $user->phone = $phone;
         $user->setPassword(!empty($password) ? $password : Yii::$app->security->generateRandomString());
         $user->created_at = time();
         $user->status = self::STATUS_ACTIVE;
@@ -52,13 +49,11 @@ class User extends ActiveRecord
     /**
      * @param string $username
      * @param string $email
-     * @param string $phone
      */
-    public function edit(string $username, string $email, string $phone): void
+    public function edit(string $username, string $email): void
     {
         $this->username = $username;
         $this->email = $email;
-        $this->phone = $phone;
         $this->updated_at = time();
     }
 
