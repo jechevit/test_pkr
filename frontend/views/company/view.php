@@ -28,6 +28,14 @@ $this->params['breadcrumbs'][] = $this->title;
                         'attribute' => 'inn',
                     ],
                     [
+                        'label' => 'Описание компании',
+                        'attribute' => 'description',
+                    ],
+                    [
+                        'label' => 'Телефон',
+                        'attribute' => 'phone',
+                    ],
+                    [
                         'label' => 'Директор компании',
                         'value' => function(Company $company) {
                             return $company->director->getFullName();

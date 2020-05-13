@@ -12,4 +12,5 @@ class Table
     const USER = '{{%user}}';
     const COMPANIES = '{{%companies}}';
     const AUTH_ASSIGNMENTS = '{{%auth_assignments}}';
+    const COMMENTS = '{{%comments}}';
 }

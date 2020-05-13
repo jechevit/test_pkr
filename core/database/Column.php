@@ -21,4 +21,10 @@ class Column
     const DIRECTOR_JSON = 'director_json';
     const ITEM_NAME = 'item_name';
     const USER_ID = 'user_id';
+    const DESCRIPTION = 'description';
+    const PHONE = 'phone';
+    const COMMON = 'common';
+    const COMPANY_ID = 'company_id';
+    const ROLE = 'role';
+    const COMMENTS_JSON = 'comments_json';
 }

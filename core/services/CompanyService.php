@@ -33,6 +33,8 @@ class CompanyService
         $company = Company::create(
             $form->name,
             $form->inn,
+            $form->description,
+            $form->phone,
             new Director(
                 $form->director->firstName,
                 $form->director->secondName,
@@ -60,6 +62,8 @@ class CompanyService
         $company->edit(
             $form->name,
             $form->inn,
+            $form->description,
+            $form->phone,
             new Director(
                 $form->director->firstName,
                 $form->director->secondName,

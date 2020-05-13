@@ -45,7 +45,6 @@ class m200511_180438_insert_data extends Migration
                 [1, 'Tesla', '123456789', '{"firstName":"Илон","secondName":"Маск","patronymic":""}', '{"country":"USA","city":"Palo Alto","street":"Deer Creek Road","house":"3500"}', time(), null],
                 [2, 'Google LLC', '98565412548', '{"firstName":"Сундар","secondName":"Пичаи","patronymic":""}', '{"country":"USA","city":"Mountain View","street":"Amphitheatre Parkway","house":"1600"}', time(), null],
                 [3, 'Яндекс', '7736207543', '{"firstName":"Аркадий","secondName":"Волож","patronymic":"Юррьевич"}', '{"country":"Россия","city":"Санкт-Петербург,","street":"Пискарёвский проспект","house":"2"}', time(), null],
-                [4, 'Профессиональные комплексные решения', '7816384562', '{"firstName":"Даниил","secondName":"Новицкий","patronymic":"Сергеевич"}', '{"country":"Россия","city":"Санкт-Петербург","street":"Марата","house":"82"}', time(), null],
             ]
         );
     }

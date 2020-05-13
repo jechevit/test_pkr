@@ -11,7 +11,9 @@ use yii\widgets\ActiveForm;
 
 <?= $form->field($model, 'name')->textInput(['autofocus' => true]) ?>
 
-<?= $form->field($model, 'inn') ?>
+<?= $form->field($model, 'inn')->textInput() ?>
+<?= $form->field($model, 'description')->textarea(['rows' => 3]) ?>
+<?= $form->field($model, 'phone')->textInput() ?>
 
 <?= $form->field($model->director, 'firstName') ?>
 <?= $form->field($model->director, 'secondName') ?>

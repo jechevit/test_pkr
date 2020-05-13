@@ -1,0 +1,119 @@
+<?php
+
+
+namespace core\entities;
+
+use core\entities\queries\CompanyQuery;
+use core\helpers\CommentHelper;
+use DateTimeImmutable;
+use yii\db\ActiveQuery;
+use yii\db\ActiveRecord;
+use yii\helpers\Json;
+
+/**
+ * Class Comment
+ * @package core\entities
+ *
+ * @property int $id
+ * @property int $company_id
+ * @property int $user_id
+ * @property int $role
+ * @property string $comments_json
+ *
+ * @property Company $company
+ */
+class Comment extends ActiveRecord
+{
+    /**
+     * @var Record[]
+     */
+    private $comments = [];
+
+    /**
+     * @param int $userId
+     * @param string $role
+     * @param string $property
+     * @param string $text
+     * @return static
+     */
+    public static function create(
+        int $userId,
+        string $role,
+        string $property,
+        string $text
+    ): self
+    {
+        $comment = new static();
+        $comment->user_id = $userId;
+        $comment->role = $role;
+        $comment->addComment($property, $text);
+        return $comment;
+    }
+
+    /**
+     * @param string $property
+     * @param string $text
+     */
+    private function addComment(string $property, string $text): void
+    {
+        $this->comments[] = new Record($property, $text, new DateTimeImmutable());
+    }
+
+    /**
+     * @param $id
+     * @return bool
+     */
+    public function isIdEqualTo($id): bool
+    {
+        return $this->id == $id;
+    }
+
+    public function getTextForProperty($property): string
+    {
+        $text = '';
+        foreach ($this->comments as $record) {
+            if ($record->getProperty() == CommentHelper::propertyValue($property)){
+                $text = $record->getText();
+            }
+        }
+        return $text;
+    }
+
+    public function getCompany(): ActiveQuery
+    {
+        return $this->hasOne(Company::class, ['id' => 'company_id']);
+    }
+
+    public function transactions(): array
+    {
+        return [
+            self::SCENARIO_DEFAULT => self::OP_ALL,
+        ];
+    }
+
+    public function afterFind(): void
+    {
+        $this->comments = array_map(function ($row) {
+            return new Record(
+                $row['property'],
+                $row['text'],
+                new DateTimeImmutable($row['created_at'])
+            );
+        }, Json::decode($this->getAttribute('comments_json')));
+
+        parent::afterFind();
+    }
+
+    public function beforeSave($insert): bool
+    {
+        $this->setAttribute('comments_json', Json::encode(array_map(function (Record $record) {
+            return [
+                'property' => $record->getProperty(),
+                'text' => $record->getText(),
+                'created_at' => $record->getCreated_at()
+            ];
+        }, $this->comments)));
+
+        return parent::beforeSave($insert);
+    }
+}
