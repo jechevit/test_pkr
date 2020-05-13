@@ -30,10 +30,12 @@ $this->params['breadcrumbs'][] = $this->title;
                     [
                         'label' => 'Описание компании',
                         'attribute' => 'description',
+                        'visible' => isset($model->description),
                     ],
                     [
                         'label' => 'Телефон',
                         'attribute' => 'phone',
+                        'visible' => isset($model->phone),
                     ],
                     [
                         'label' => 'Директор компании',

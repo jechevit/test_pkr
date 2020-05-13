@@ -4,15 +4,16 @@ use console\controllers\RoleController;
 use core\entities\Company;
 use frontend\forms\CompanySearch;
 use yii\data\ArrayDataProvider;
-use yii\grid\ActionColumn;
-use yii\grid\GridView;
 use yii\helpers\Html;
+use yii\widgets\DetailView;
 
 /** @var $dataProvider ArrayDataProvider */
 /** @var $searchModel CompanySearch */
 
 $this->title = 'Компании';
 $this->params['breadcrumbs'][] = $this->title;
+
+$companies = array_chunk($dataProvider->getModels(), 2);
 ?>
 
 <div class="site-contact">
@@ -22,33 +23,41 @@ $this->params['breadcrumbs'][] = $this->title;
         </p>
     <?php endif;?>
 
-    <?= GridView::widget([
-        'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,
-        'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
-            [
-                'label' => 'Название компании',
-                'attribute' => 'name',
-                'value' => function(Company $company) {
-                    return Html::a($company->name, ['view', 'id' => $company->id]);
-                },
-                'format' => 'raw'
-            ],
-            'inn',
-            [
-                'label' => 'Дата создания',
-                'attribute' => 'created_at',
-                'value' => function(Company $company) {
-                    return Yii::$app->formatter->asDatetime($company->created_at, 'php:Y-m-d H:i:s');
-                }
-            ],
+   <?php foreach ($companies as $row):?>
+       <div class="row">
+           <?php /** @var Company $company */
+           foreach ($row as $company):?>
+               <div class="col-md-6">
+                   <div class="panel panel-default ">
+                       <div class="panel-heading">
+                           <h3 class="panel-title"><?= Html::a($company->name, ['view', 'id' => $company->id])?></h3>
+                       </div>
+                       <div class="panel-body">
+                           <?= DetailView::widget([
+                               'model' => $company,
+                               'attributes' => [
+                                   [
+                                       'label' => 'ИНН',
+                                       'attribute' => 'inn',
+                                   ],
+                                   [
+                                       'label' => 'Телефон',
+                                       'attribute' => 'phone',
+                                       'visible' => isset($company->phone),
+                                   ],
+                                   [
+                                       'label' => 'Директор компании',
+                                       'value' => function(Company $company) {
+                                           return $company->director->getFullName();
+                                       }
+                                   ],
+                               ],
+                           ])?>
+                       </div>
+                   </div>
+               </div>
+           <?php endforeach;?>
+       </div>
+   <?php endforeach;?>
 
-            [
-                'class' => ActionColumn::class,
-                'template' => Yii::$app->user->can(RoleController::ADMIN) ? '{view} {update} {delete}' : '{view}',
-            ],
-        ],
-    ]); ?>
-
-</div>
+</>

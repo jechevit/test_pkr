@@ -80,9 +80,6 @@ class CompanyController extends Controller
     {
         $company = $this->findModel($id);
 
-        if (Yii::$app->user->can(RoleController::ADMIN)) {
-            return $this->redirect(['update', 'id' => $company->id]);
-        }
         return $this->render('view', [
             'model' => $company
         ]);
@@ -97,7 +94,7 @@ class CompanyController extends Controller
 
         if ($form->load(Yii::$app->request->post()) && $form->validate()) {
             try {
-                $company = $this->service->create($form);
+                $this->service->create($form);
                 return $this->redirect(['index']);
             } catch (DomainException $e) {
                 Yii::$app->errorHandler->logException($e);
