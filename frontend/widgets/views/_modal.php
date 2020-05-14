@@ -24,7 +24,7 @@ Modal::begin([
     'action' => ['company/comment']
 ]); ?>
 
-<?= $form->field($model, 'text')->textInput(['autofocus' => true]) ?>
+<?= $form->field($model, 'text')->textInput(['autofocus' => true])->label('Комментарий') ?>
 <?= $form->field($model, 'property')->hiddenInput(['value' => $property])->label(false) ?>
 <?= $form->field($model, 'companyId')->hiddenInput(['value' => $company->id])->label(false) ?>
 
