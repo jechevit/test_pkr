@@ -56,6 +56,11 @@ class Comment extends ActiveRecord
         $this->comments[] = new Record(CommentHelper::propertyValue($property), $text, new DateTimeImmutable());
     }
 
+    public function getRecord(): Record
+    {
+        return end($this->comments);
+    }
+
     /**
      * @param $id
      * @return bool

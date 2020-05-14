@@ -62,4 +62,22 @@ class CommentHelper
             ['title' => 'Добавить комментарий']
         );
     }
+
+    public static function propertiesNamesList(): array
+    {
+        return [
+            Column::NAME => 'поле "Имя"',
+            Column::INN => 'поле "ИНН"',
+            Column::DESCRIPTION => 'поле "Описание"',
+            Column::PHONE => 'поле "Телефон"',
+            Column::ADDRESS_JSON => 'поле "Адрес"',
+            Column::DIRECTOR_JSON => 'поле "Директор"',
+            Column::COMMON => 'всю компанию',
+        ];
+    }
+
+    public static function getNameOfProperty(string $property)
+    {
+        return ArrayHelper::getValue(self::propertiesNamesList(), $property);
+    }
 }

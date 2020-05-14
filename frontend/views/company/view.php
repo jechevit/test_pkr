@@ -13,7 +13,6 @@ $this->title = 'Просмотр компании: ' . $model->name;
 $this->params['breadcrumbs'][] = ['label' => 'Компании', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 
-    var_dump((Yii::$app->authManager->getRolesByUser(Yii::$app->user->id)));
 ?>
 
 <div class="site-contact">
@@ -80,21 +79,33 @@ $this->params['breadcrumbs'][] = $this->title;
                 ],
             ])?>
         </div>
-
+        <?php if (!empty($model->comments)):?>
         <div class="comments">
+            <h3>Комментарии:</h3>
             <?php /** @var Comment $comment */
             foreach ($model->comments as $comment):?>
-                <div class="media">
-                    <div class="media-body">
-                        <h4 class="media-heading"><?= $comment->user->username?></h4>
-                        <p>
-                            <?php var_dump($comment->comments_json);?>
-                        </p>
-                        ...
+
+                <div class="panel panel-default">
+                    <div class="panel-heading clearfix">
+                        <div class="panel-title pull-left">
+                            <p class="panel-title">
+                            <strong><?= $comment->user->username?></strong> прокомментировал <?= CommentHelper::getNameOfProperty($comment->getRecord()->getProperty())?>:
+
+                            </p>
+                        </div>
+                        <div class="panel-title pull-right">
+                            Создано: <?= Yii::$app->formatter->asDatetime($comment->getRecord()->getCreated_at(), 'php:d.m.yy H:i:s') ?>
+                        </div>
+                    </div>
+
+                    <div class="panel-body">
+                        <?= $comment->getRecord()->getText()?>
                     </div>
                 </div>
+
             <?php endforeach;?>
         </div>
+        <?php endif;?>
     </div>
 
 </div>
