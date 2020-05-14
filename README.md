@@ -5,7 +5,7 @@
 
 1. Клонируем проект с GitHub:
     ````
-    git clone https://github.com/jechevit/testApple.git
+    git clone https://github.com/jechevit/test_pkr.git
     ````
 2. Открываем терминал и выполняем ```` init ```` выбрав  ```` dev ```` окружение.
 3. Выполнить команду  ````composer update````.
