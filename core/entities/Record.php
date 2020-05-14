@@ -2,7 +2,6 @@
 
 namespace core\entities;
 
-use core\helpers\CommentHelper;
 use DateTimeImmutable;
 
 /**
@@ -32,7 +31,7 @@ class Record
      */
     public function __construct(string $property, string $text, DateTimeImmutable $created_at)
     {
-        $this->property = CommentHelper::propertyValue($property);
+        $this->property = $property;
         $this->text = $text;
         $this->created_at = $created_at;
     }
@@ -45,10 +44,7 @@ class Record
         return $this->text;
     }
 
-    /**
-     * @return int
-     */
-    public function getProperty(): int
+    public function getProperty()
     {
         return $this->property;
     }

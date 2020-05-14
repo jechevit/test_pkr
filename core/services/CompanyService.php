@@ -3,10 +3,13 @@
 namespace core\services;
 
 use core\entities\Address;
+use core\entities\Comment;
 use core\entities\Company;
 use core\entities\Director;
+use core\forms\comment\CommentForm;
 use core\forms\CompanyForm;
 use core\repositories\CompanyRepository;
+use core\repositories\UserRepository;
 
 class CompanyService
 {
@@ -14,14 +17,23 @@ class CompanyService
      * @var CompanyRepository
      */
     private $repository;
+    /**
+     * @var UserRepository
+     */
+    private $userRepository;
 
     /**
      * CompanyService constructor.
      * @param CompanyRepository $repository
+     * @param UserRepository $userRepository
      */
-    public function __construct(CompanyRepository $repository)
+    public function __construct(
+        CompanyRepository $repository,
+        UserRepository $userRepository
+    )
     {
         $this->repository = $repository;
+        $this->userRepository = $userRepository;
     }
 
     /**
@@ -87,5 +99,32 @@ class CompanyService
     {
         $company = $this->repository->get($id);
         $this->repository->remove($company);
+    }
+
+    /**
+     * @param int $companyId
+     * @param int $userId
+     * @param string $property
+     * @param CommentForm $form
+     * @return Comment
+     */
+    public function addComment(
+        int $companyId,
+        int $userId,
+        string $property,
+        CommentForm $form
+    ): Comment
+    {
+        $company = $this->repository->get($companyId);
+        $user = $this->userRepository->get($userId);
+
+        $comment = $company->addComment(
+            $user->id,
+            $property,
+            $form->text
+        );
+        $this->repository->save($company);
+
+        return $comment;
     }
 }

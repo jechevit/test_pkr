@@ -22,7 +22,6 @@ class m200513_201526_create_comments_table extends Migration
             Column::ID => $this->primaryKey(),
             Column::COMPANY_ID => $this->integer()->notNull(),
             Column::USER_ID => $this->integer()->notNull(),
-            Column::ROLE => $this->integer()->notNull(),
             Column::COMMENTS_JSON => $this->text(),
         ]);
 

@@ -7,6 +7,7 @@ use core\behaviors\DirectorBehavoir;
 use core\database\Table;
 use core\entities\queries\CompanyQuery;
 use DomainException;
+use lhs\Yii2SaveRelationsBehavior\SaveRelationsBehavior;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 
@@ -94,8 +95,7 @@ class Company extends ActiveRecord
     public function addComment($userId, $property, $text): Comment
     {
         $comments = $this->comments;
-        $role = 'admin';
-        $comments[] = $comment = Comment::create($userId, $role, $property, $text);
+        $comments[] = $comment = Comment::create($userId, $property, $text);
         $this->updateComments($comments);
         return $comment;
     }
@@ -123,6 +123,7 @@ class Company extends ActiveRecord
         return Table::COMPANIES;
     }
 
+
     public function getComments(): ActiveQuery
     {
         return $this->hasMany(Comment::class, ['company_id' => 'id']);
@@ -133,6 +134,10 @@ class Company extends ActiveRecord
         return [
             AddressBehavoir::class,
             DirectorBehavoir::class,
+            [
+                'class' => SaveRelationsBehavior::class,
+                'relations' => ['comments'],
+            ],
         ];
     }
 

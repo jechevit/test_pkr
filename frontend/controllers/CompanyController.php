@@ -3,7 +3,9 @@
 namespace frontend\controllers;
 
 use console\controllers\RoleController;
+use core\database\Column;
 use core\entities\Company;
+use core\forms\comment\CommentForm;
 use core\forms\CompanyForm;
 use core\services\CompanyService;
 use DomainException;
@@ -47,7 +49,8 @@ class CompanyController extends Controller
                         'actions' => [
                             'create',
                             'update',
-                            'delete'
+                            'delete',
+                            'comment',
                         ],
                         'allow' => true,
                         'roles' => [RoleController::ADMIN],
@@ -144,6 +147,40 @@ class CompanyController extends Controller
             Yii::$app->session->setFlash('error', $e->getMessage());
         }
         return $this->redirect(['index']);
+    }
+
+    /**
+     * @param $id
+     * @param $property
+     * @return mixed
+     * @throws NotFoundHttpException
+     */
+    public function actionComment(int $id, string $property)
+    {
+        $company = $this->findModel($id);
+
+        if ($property != Column::COMMON){
+            if (!isset($company->{$property})) {
+                throw new DomainException('Нельзя оставить комментарий');
+            }
+        }
+
+        $form = new CommentForm();
+
+        if ($form->load(Yii::$app->request->post()) && $form->validate()) {
+            try {
+                $comment = $this->service->addComment($company->id, Yii::$app->user->id, $property, $form);
+                return $this->redirect(['view', 'id' => $company->id, '#' => 'comment_' . $comment->id]);
+            } catch (DomainException $e) {
+                Yii::$app->errorHandler->logException($e);
+                Yii::$app->session->setFlash('error', $e->getMessage());
+            }
+        }
+
+        return $this->render('comment', [
+            'company' => $company,
+            'model' => $form,
+        ]);
     }
 
     /**
