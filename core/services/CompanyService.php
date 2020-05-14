@@ -6,7 +6,6 @@ use core\entities\Address;
 use core\entities\Comment;
 use core\entities\Company;
 use core\entities\Director;
-use core\forms\comment\CommentForm;
 use core\forms\CompanyForm;
 use core\repositories\CompanyRepository;
 use core\repositories\UserRepository;
@@ -105,14 +104,14 @@ class CompanyService
      * @param int $companyId
      * @param int $userId
      * @param string $property
-     * @param CommentForm $form
+     * @param string $text
      * @return Comment
      */
     public function addComment(
         int $companyId,
         int $userId,
         string $property,
-        CommentForm $form
+        string $text
     ): Comment
     {
         $company = $this->repository->get($companyId);
@@ -121,7 +120,7 @@ class CompanyService
         $comment = $company->addComment(
             $user->id,
             $property,
-            $form->text
+            $text
         );
         $this->repository->save($company);
 

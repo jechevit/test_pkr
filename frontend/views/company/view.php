@@ -4,6 +4,7 @@ use core\database\Column;
 use core\entities\Comment;
 use core\entities\Company;
 use core\helpers\CommentHelper;
+use frontend\widgets\CommentWidget;
 use yii\helpers\Html;
 use yii\widgets\DetailView;
 
@@ -16,8 +17,7 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 
 <div class="site-contact">
-    <h1><?= Html::encode($this->title) . CommentHelper::button($model, Column::COMMON)?></h1>
-
+    <h2><?= Html::encode($this->title) . CommentWidget::widget(['company' => $model, 'property' => Column::COMMON]) ?></h2>
     <div class="box">
         <div class="box-body">
             <?= DetailView::widget([
@@ -26,14 +26,14 @@ $this->params['breadcrumbs'][] = $this->title;
                     [
                         'label' => 'Название компании',
                         'value' => function(Company $company) {
-                            return $company->name . CommentHelper::button($company, Column::NAME);
+                            return $company->name . CommentWidget::widget(['company' => $company, 'property' => Column::NAME]);
                         },
                         'format' => 'raw'
                     ],
                     [
                         'label' => 'ИНН',
                         'value' => function(Company $company) {
-                            return $company->inn . CommentHelper::button($company, Column::INN);
+                            return $company->inn . CommentWidget::widget(['company' => $company, 'property' => Column::INN]);
                         },
                         'format' => 'raw'
                     ],
@@ -42,7 +42,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         'attribute' => 'description',
                         'visible' => isset($model->description),
                         'value' => function(Company $company) {
-                            return $company->description . CommentHelper::button($company, Column::DESCRIPTION);
+                            return $company->description . CommentWidget::widget(['company' => $company, 'property' => Column::DESCRIPTION]);
                         },
                         'format' => 'raw'
                     ],
@@ -51,21 +51,21 @@ $this->params['breadcrumbs'][] = $this->title;
                         'attribute' => 'phone',
                         'visible' => isset($model->phone),
                         'value' => function(Company $company) {
-                            return $company->phone . CommentHelper::button($company, Column::PHONE);
+                            return $company->phone . CommentWidget::widget(['company' => $company, 'property' => Column::PHONE]);
                         },
                         'format' => 'raw'
                     ],
                     [
                         'label' => 'Директор компании',
                         'value' => function(Company $company) {
-                            return $company->director->getFullName() . CommentHelper::button($company, Column::DIRECTOR_JSON);
+                            return $company->director->getFullName() . CommentWidget::widget(['company' => $company, 'property' => Column::DIRECTOR_JSON]);
                         },
                         'format' => 'raw'
                     ],
                     [
                         'label' => 'Адрес компании',
                         'value' => function(Company $company) {
-                            return $company->address->getAddress() . CommentHelper::button($company, Column::ADDRESS_JSON);
+                            return $company->address->getAddress() . CommentWidget::widget(['company' => $company, 'property' => Column::ADDRESS_JSON]);
                         },
                         'format' => 'raw'
                     ],
@@ -90,7 +90,6 @@ $this->params['breadcrumbs'][] = $this->title;
                         <div class="panel-title pull-left">
                             <p class="panel-title">
                             <strong><?= $comment->user->username?></strong> прокомментировал <?= CommentHelper::getNameOfProperty($comment->getRecord()->getProperty())?>:
-
                             </p>
                         </div>
                         <div class="panel-title pull-right">

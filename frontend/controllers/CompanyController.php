@@ -40,20 +40,14 @@ class CompanyController extends Controller
                     [
                         'actions' => [
                             'index',
-                            'view'
-                        ],
-                        'allow' => true,
-                        'roles' => [RoleController::USER],
-                    ],
-                    [
-                        'actions' => [
+                            'view',
                             'create',
                             'update',
                             'delete',
                             'comment',
                         ],
                         'allow' => true,
-                        'roles' => [RoleController::ADMIN],
+                        'roles' => [RoleController::ADMIN, RoleController::USER],
                     ],
                 ],
             ],
@@ -150,14 +144,19 @@ class CompanyController extends Controller
     }
 
     /**
-     * @param $id
-     * @param $property
      * @return mixed
      * @throws NotFoundHttpException
      */
-    public function actionComment(int $id, string $property)
+    public function actionComment()
     {
-        $company = $this->findModel($id);
+        if (!isset(Yii::$app->request->bodyParams['CommentForm'])) {
+            return $this->redirect(['index']);
+        }
+        $property = Yii::$app->request->bodyParams['CommentForm']['property'];
+        $text = Yii::$app->request->bodyParams['CommentForm']['text'];
+        $companyId = Yii::$app->request->bodyParams['CommentForm']['companyId'];
+
+        $company = $this->findModel($companyId);
 
         if ($property != Column::COMMON){
             if (!isset($company->{$property})) {
@@ -165,21 +164,15 @@ class CompanyController extends Controller
             }
         }
 
-        $form = new CommentForm();
-
-        if ($form->load(Yii::$app->request->post()) && $form->validate()) {
-            try {
-                $comment = $this->service->addComment($company->id, Yii::$app->user->id, $property, $form);
-                return $this->redirect(['view', 'id' => $company->id, '#' => 'comment_' . $comment->id]);
-            } catch (DomainException $e) {
-                Yii::$app->errorHandler->logException($e);
-                Yii::$app->session->setFlash('error', $e->getMessage());
-            }
+        try {
+            $comment = $this->service->addComment($company->id, Yii::$app->user->id, $property, $text);
+            return $this->redirect(['view', 'id' => $company->id, '#' => 'comment_' . $comment->id]);
+        } catch (DomainException $e) {
+            Yii::$app->errorHandler->logException($e);
+            Yii::$app->session->setFlash('error', $e->getMessage());
         }
-
-        return $this->render('comment', [
-            'company' => $company,
-            'model' => $form,
+        return $this->redirect('view', [
+            'id' => $company->id,
         ]);
     }
 
